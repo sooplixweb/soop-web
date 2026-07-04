@@ -340,7 +340,10 @@ function App() {
                   : caseStudies.map((caseStudy) => (
                       <Col xs={24} md={12} key={`${caseStudy.title}-${caseStudy.segment}`}>
                         <Card className="case-card">
-                          <CaseVisual caseStudy={caseStudy} />
+                          <CaseVisual
+                            caseStudy={caseStudy}
+                            showProjectMockup={caseStudy.title.trim().toLowerCase() === 'mais burguer'}
+                          />
                           <Tag>{caseStudy.segment}</Tag>
                           <Title level={3}>{caseStudy.title}</Title>
                           <Paragraph>{caseStudy.description}</Paragraph>
