@@ -12,7 +12,6 @@ import {
   Select,
   Skeleton,
   Statistic,
-  Steps,
   Tag,
   Typography,
   message,
@@ -253,21 +252,26 @@ function App() {
                     {deliveryProduct?.description ||
                       'Cardápio digital, pedidos, integração e gestão para hamburguerias que querem vender com mais controle.'}
                   </Paragraph>
-                  <Steps
-                    direction="vertical"
-                    current={3}
-                    items={(deliveryProduct?.features || [
+                  <div className="delivery-flow" aria-label="Fluxo de delivery">
+                    {(deliveryProduct?.features || [
                       'Cardápio digital',
                       'Pedidos online',
                       'Fluxo operacional',
                       'Painel de gestão',
-                    ]).map((feature) => ({ title: feature }))}
-                  />
+                    ]).map((feature, index) => (
+                      <div className="delivery-flow__item" key={feature}>
+                        <span className="delivery-flow__badge">
+                          <span className="delivery-flow__number">{index + 1}</span>
+                          <span className="delivery-flow__label">{feature}</span>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </Col>
                 <Col xs={24} lg={12}>
                   <div className="delivery-frame">
                     {maisBurguerCase ? (
-                      <CaseVisual caseStudy={maisBurguerCase} />
+                      <CaseVisual caseStudy={maisBurguerCase} showProjectMockup />
                     ) : (
                       <CaseVisual
                         caseStudy={{
@@ -278,6 +282,7 @@ function App() {
                           description: '',
                           order: 1,
                         }}
+                        showProjectMockup
                       />
                     )}
                   </div>

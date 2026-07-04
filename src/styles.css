@@ -172,7 +172,7 @@ a {
 
 .hero-section {
   min-height: 92vh;
-  padding: 154px 0 96px;
+  padding: 77px 0 48px;
   display: flex;
   align-items: center;
   color: var(--cloud);
@@ -290,14 +290,19 @@ a {
 }
 
 .hero-mark__logo {
+  --hero-logo-x: 7%;
+  --hero-logo-y: -36px;
+  --hero-logo-float-y: -48px;
   position: relative;
   z-index: 2;
   display: block;
   width: min(72vw, 940px);
   max-width: 142%;
   height: auto;
-  transform: translate(7%, -36px);
+  transform: translate(var(--hero-logo-x), var(--hero-logo-y));
   filter: drop-shadow(0 34px 54px rgba(10, 15, 31, 0.32));
+  animation: heroLogoFloat 6.4s ease-in-out infinite;
+  will-change: transform, filter;
 }
 
 .hero-mark__halo {
@@ -343,7 +348,7 @@ a {
 
 .section {
   position: relative;
-  padding: clamp(82px, 10vw, 128px) 0;
+  padding: clamp(41px, 5vw, 64px) 0;
 }
 
 .section--light {
@@ -556,14 +561,102 @@ a {
   color: var(--indigo);
 }
 
-.delivery-section .ant-steps .ant-steps-item-title,
-.delivery-section .ant-steps .ant-steps-item-description {
-  color: var(--cloud) !important;
+.delivery-flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  margin-top: 30px;
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
 
-.delivery-section .ant-steps .ant-steps-item-icon {
+.delivery-flow__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.delivery-flow__item:not(:last-child)::after {
+  content: "";
+  flex: 1 1 32px;
+  min-width: 22px;
+  height: 2px;
+  margin: 0 10px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(205, 213, 226, 0.28) 0 9px,
+    transparent 9px 16px
+  );
+  background-size: 32px 2px;
+  animation: delivery-flow-dashes 1.6s linear infinite;
+}
+
+.delivery-flow__badge {
+  position: relative;
+  isolation: isolate;
+  flex: 0 1 154px;
+  min-width: 0;
+  width: min(100%, 154px);
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  color: var(--white);
   background: linear-gradient(135deg, #312e81, var(--indigo) 54%, var(--electric));
-  border-color: var(--electric);
+  box-shadow: 0 18px 44px -28px rgba(110, 139, 255, 0.86);
+}
+
+.delivery-flow__item:nth-child(2) .delivery-flow__badge {
+  background: linear-gradient(135deg, var(--indigo), #5b6ff0 52%, #7dd3fc);
+}
+
+.delivery-flow__item:nth-child(3) .delivery-flow__badge {
+  background: linear-gradient(135deg, #0f766e, #2563eb 52%, var(--electric));
+}
+
+.delivery-flow__item:nth-child(4) .delivery-flow__badge {
+  background: linear-gradient(135deg, #1e1b4b, #4338ca 52%, #f97316);
+}
+
+.delivery-flow__number {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--white);
+  background: rgba(10, 15, 31, 0.35);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.delivery-flow__label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.08;
+  text-align: left;
+}
+
+@keyframes delivery-flow-dashes {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 32px 0;
+  }
 }
 
 .delivery-frame {
@@ -978,6 +1071,19 @@ a {
   }
 }
 
+@keyframes heroLogoFloat {
+  0%,
+  100% {
+    transform: translate(var(--hero-logo-x), var(--hero-logo-y));
+    filter: drop-shadow(0 34px 54px rgba(10, 15, 31, 0.32));
+  }
+
+  50% {
+    transform: translate(var(--hero-logo-x), var(--hero-logo-float-y));
+    filter: drop-shadow(0 46px 64px rgba(10, 15, 31, 0.42));
+  }
+}
+
 @keyframes sooplixTerminalContour {
   to {
     stroke-dashoffset: -255;
@@ -1024,7 +1130,7 @@ a {
   }
 
   .hero-section {
-    padding-top: 124px;
+    padding-top: 62px;
   }
 
   .hero-grid {
@@ -1037,9 +1143,11 @@ a {
   }
 
   .hero-mark__logo {
+    --hero-logo-x: 0;
+    --hero-logo-y: -18px;
+    --hero-logo-float-y: -28px;
     width: min(108vw, 620px);
     max-width: 128%;
-    transform: translate(0, -18px);
   }
 
   .footer-grid {
@@ -1102,7 +1210,7 @@ a {
   }
 
   .section {
-    padding: 72px 0;
+    padding: 36px 0;
   }
 
   .case-visual {
