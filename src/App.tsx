@@ -79,7 +79,22 @@ const iconMap: Record<string, LucideIcon> = {
   'shopping-bag': ShoppingBag,
 };
 
-const AMAGUS_LAPIDAR_CASE: CaseStudy = {
+type ShowcaseCaseStudy = CaseStudy & {
+  projectUrl: string;
+};
+
+const AMBUG_BURG_FALLBACK_CASE: ShowcaseCaseStudy = {
+  id: 'ambug-burg-local',
+  title: 'Ambug Burg',
+  segment: 'Delivery / Hamburgueria',
+  imageUrl: '',
+  description:
+    'Operação de delivery com cardápio digital, fluxo de pedidos e experiência visual alinhada à rotina de uma hamburgueria em crescimento.',
+  order: 1,
+  projectUrl: 'https://ambugburg.sooplix.com.br',
+};
+
+const AMAGUS_LAPIDAR_CASE: ShowcaseCaseStudy = {
   id: 'amagus-lapidar-local',
   title: 'Amagus Lapidar',
   segment: 'Psicoterapia',
@@ -87,6 +102,7 @@ const AMAGUS_LAPIDAR_CASE: CaseStudy = {
   description:
     'Landing page institucional com escuta acolhedora, autoridade clínica e presença digital sensível para a psicoterapeuta.',
   order: 2,
+  projectUrl: 'https://analuizarigueira.com.br',
 };
 
 function SectionHeading({
@@ -115,24 +131,24 @@ function App() {
   const [messageApi, contextHolder] = message.useMessage();
   const [submitting, setSubmitting] = useState(false);
   const deliveryProduct = products.find((product) => product.slug === 'gestao-delivery-hamburguerias');
-  const maisBurguerCase = caseStudies.find((caseStudy) => caseStudy.title === 'Mais Burguer');
-  const showcaseCaseStudies = useMemo(() => {
-    if (caseStudies.some((caseStudy) => caseStudy.title.trim().toLowerCase() === 'amagus lapidar')) {
-      return caseStudies;
-    }
-
-    const burgerIndex = caseStudies.findIndex(
+  const ambugBurgCase = useMemo<ShowcaseCaseStudy>(() => {
+    const deliveryCase = caseStudies.find(
       (caseStudy) => caseStudy.title.trim().toLowerCase() === 'mais burguer',
     );
 
-    if (burgerIndex === -1) {
-      return [AMAGUS_LAPIDAR_CASE, ...caseStudies];
+    if (!deliveryCase) {
+      return AMBUG_BURG_FALLBACK_CASE;
     }
 
-    const nextCaseStudies = [...caseStudies];
-    nextCaseStudies.splice(burgerIndex + 1, 0, AMAGUS_LAPIDAR_CASE);
-    return nextCaseStudies;
+    return {
+      ...deliveryCase,
+      title: 'Ambug Burg',
+      projectUrl: 'https://ambugburg.sooplix.com.br',
+    };
   }, [caseStudies]);
+  const showcaseCaseStudies = useMemo<ShowcaseCaseStudy[]>(() => {
+    return [ambugBurgCase, AMAGUS_LAPIDAR_CASE];
+  }, [ambugBurgCase]);
   const productOptions = useMemo(
     () => products.map((product) => ({ label: product.name, value: product.name })),
     [products],
@@ -293,21 +309,11 @@ function App() {
                 </Col>
                 <Col xs={24} lg={12}>
                   <div className="delivery-frame">
-                    {maisBurguerCase ? (
-                      <CaseVisual caseStudy={maisBurguerCase} showProjectMockup />
-                    ) : (
-                      <CaseVisual
-                        caseStudy={{
-                          id: 'mais-burguer-preview',
-                          title: 'Mais Burguer',
-                          segment: 'Delivery / Hamburgueria',
-                          imageUrl: '',
-                          description: '',
-                          order: 1,
-                        }}
-                        showProjectMockup
-                      />
-                    )}
+                    <CaseVisual
+                      caseStudy={ambugBurgCase}
+                      projectUrl={ambugBurgCase.projectUrl}
+                      showProjectMockup
+                    />
                   </div>
                 </Col>
               </Row>
@@ -370,10 +376,8 @@ function App() {
                         <Card className="case-card">
                           <CaseVisual
                             caseStudy={caseStudy}
-                            showProjectMockup={
-                              caseStudy.title.trim().toLowerCase() === 'mais burguer' ||
-                              caseStudy.title.trim().toLowerCase() === 'amagus lapidar'
-                            }
+                            projectUrl={caseStudy.projectUrl}
+                            showProjectMockup
                           />
                           <Tag>{caseStudy.segment}</Tag>
                           <Title level={3}>{caseStudy.title}</Title>

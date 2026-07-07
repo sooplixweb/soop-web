@@ -630,6 +630,21 @@ a {
   backdrop-filter: blur(10px);
 }
 
+.case-visual__caption-link {
+  display: grid;
+  gap: 8px;
+  color: inherit;
+}
+
+.case-visual__caption-link:hover {
+  color: var(--white);
+}
+
+.case-visual__caption-link:focus-visible {
+  outline: 2px solid rgba(110, 139, 255, 0.72);
+  outline-offset: 6px;
+}
+
 .case-visual__caption span {
   font-family: "IBM Plex Mono", ui-monospace, monospace;
   font-size: 10px;

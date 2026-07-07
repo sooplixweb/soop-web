@@ -2,10 +2,15 @@ import type { CaseStudy } from '../types';
 
 type CaseVisualProps = {
   caseStudy: CaseStudy;
+  projectUrl?: string;
   showProjectMockup?: boolean;
 };
 
 const projectMockups: Record<string, { desktopSrc: string; mobileSrc: string }> = {
+  'ambug burg': {
+    desktopSrc: '/assets/mais-burguer-desktop.png',
+    mobileSrc: '/assets/mais-burguer-mobile.png',
+  },
   'mais burguer': {
     desktopSrc: '/assets/mais-burguer-desktop.png',
     mobileSrc: '/assets/mais-burguer-mobile.png',
@@ -34,7 +39,7 @@ function getCaseVariant(segment: string) {
   return 'psychology';
 }
 
-export function CaseVisual({ caseStudy, showProjectMockup = false }: CaseVisualProps) {
+export function CaseVisual({ caseStudy, projectUrl, showProjectMockup = false }: CaseVisualProps) {
   const variant = getCaseVariant(caseStudy.segment);
   const normalizedTitle = caseStudy.title.trim().toLowerCase();
   const projectMockup = showProjectMockup ? projectMockups[normalizedTitle] : undefined;
@@ -87,8 +92,23 @@ export function CaseVisual({ caseStudy, showProjectMockup = false }: CaseVisualP
         </div>
       </div>
       <div className="case-visual__caption">
-        <span>{caseStudy.segment}</span>
-        <strong>{caseStudy.title}</strong>
+        {projectUrl ? (
+          <a
+            className="case-visual__caption-link"
+            href={projectUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`Abrir projeto ${caseStudy.title}`}
+          >
+            <span>{caseStudy.segment}</span>
+            <strong>{caseStudy.title}</strong>
+          </a>
+        ) : (
+          <>
+            <span>{caseStudy.segment}</span>
+            <strong>{caseStudy.title}</strong>
+          </>
+        )}
       </div>
     </div>
   );

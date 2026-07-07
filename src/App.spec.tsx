@@ -82,16 +82,33 @@ vi.mock('./components/MotionSection', () => ({
 }));
 
 describe('App case studies', () => {
-  it('renders Amagus Lapidar right after Mais Burguer with its project mockup', () => {
+  it('renders only Ambug Burg and Amagus Lapidar with clickable project captions', () => {
     const { container } = render(<App />);
 
+    const casesSection = container.querySelector('#cases');
     const titles = Array.from(container.querySelectorAll('#cases .case-card h3')).map((node) =>
       node.textContent?.trim(),
     );
+    const caseCards = container.querySelectorAll('#cases .case-card');
+    const caseLinks = casesSection?.querySelectorAll('.case-visual__caption-link') ?? [];
+    const ambugLink = casesSection?.querySelector('[aria-label="Abrir projeto Ambug Burg"]');
+    const amagusLink = casesSection?.querySelector('[aria-label="Abrir projeto Amagus Lapidar"]');
 
-    expect(screen.getByRole('heading', { name: 'Mais Burguer', level: 3 })).toBeInTheDocument();
+    expect(caseCards).toHaveLength(2);
+    expect(casesSection).not.toBeNull();
+    expect(caseLinks).toHaveLength(2);
+    expect(screen.getByRole('heading', { name: 'Ambug Burg', level: 3 })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Amagus Lapidar', level: 3 })).toBeInTheDocument();
-    expect(titles).toEqual(['Mais Burguer', 'Amagus Lapidar', 'Advocacia Premium']);
+    expect(screen.queryByRole('heading', { name: 'Advocacia Premium', level: 3 })).not.toBeInTheDocument();
+    expect(titles).toEqual(['Ambug Burg', 'Amagus Lapidar']);
+    expect(ambugLink).toHaveAttribute(
+      'href',
+      'https://ambugburg.sooplix.com.br',
+    );
+    expect(amagusLink).toHaveAttribute(
+      'href',
+      'https://analuizarigueira.com.br',
+    );
     expect(
       container.querySelector('img[src="/assets/amagus-lapidar-desktop.png"]'),
     ).toBeInTheDocument();
