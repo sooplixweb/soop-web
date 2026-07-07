@@ -39,7 +39,7 @@ import { CaseVisual } from './components/CaseVisual';
 import { Logo } from './components/Logo';
 import { MotionSection } from './components/MotionSection';
 import { useLandingData } from './hooks/useLandingData';
-import type { LeadPayload } from './types';
+import type { CaseStudy, LeadPayload } from './types';
 
 const { Header, Content, Footer } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -79,6 +79,16 @@ const iconMap: Record<string, LucideIcon> = {
   'shopping-bag': ShoppingBag,
 };
 
+const AMAGUS_LAPIDAR_CASE: CaseStudy = {
+  id: 'amagus-lapidar-local',
+  title: 'Amagus Lapidar',
+  segment: 'Psicoterapia',
+  imageUrl: '',
+  description:
+    'Landing page institucional com escuta acolhedora, autoridade clínica e presença digital sensível para a psicoterapeuta.',
+  order: 2,
+};
+
 function SectionHeading({
   kicker,
   title,
@@ -106,6 +116,23 @@ function App() {
   const [submitting, setSubmitting] = useState(false);
   const deliveryProduct = products.find((product) => product.slug === 'gestao-delivery-hamburguerias');
   const maisBurguerCase = caseStudies.find((caseStudy) => caseStudy.title === 'Mais Burguer');
+  const showcaseCaseStudies = useMemo(() => {
+    if (caseStudies.some((caseStudy) => caseStudy.title.trim().toLowerCase() === 'amagus lapidar')) {
+      return caseStudies;
+    }
+
+    const burgerIndex = caseStudies.findIndex(
+      (caseStudy) => caseStudy.title.trim().toLowerCase() === 'mais burguer',
+    );
+
+    if (burgerIndex === -1) {
+      return [AMAGUS_LAPIDAR_CASE, ...caseStudies];
+    }
+
+    const nextCaseStudies = [...caseStudies];
+    nextCaseStudies.splice(burgerIndex + 1, 0, AMAGUS_LAPIDAR_CASE);
+    return nextCaseStudies;
+  }, [caseStudies]);
   const productOptions = useMemo(
     () => products.map((product) => ({ label: product.name, value: product.name })),
     [products],
@@ -338,12 +365,15 @@ function App() {
                         </Card>
                       </Col>
                     ))
-                  : caseStudies.map((caseStudy) => (
+                  : showcaseCaseStudies.map((caseStudy) => (
                       <Col xs={24} md={12} key={`${caseStudy.title}-${caseStudy.segment}`}>
                         <Card className="case-card">
                           <CaseVisual
                             caseStudy={caseStudy}
-                            showProjectMockup={caseStudy.title.trim().toLowerCase() === 'mais burguer'}
+                            showProjectMockup={
+                              caseStudy.title.trim().toLowerCase() === 'mais burguer' ||
+                              caseStudy.title.trim().toLowerCase() === 'amagus lapidar'
+                            }
                           />
                           <Tag>{caseStudy.segment}</Tag>
                           <Title level={3}>{caseStudy.title}</Title>

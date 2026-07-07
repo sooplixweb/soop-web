@@ -5,6 +5,17 @@ type CaseVisualProps = {
   showProjectMockup?: boolean;
 };
 
+const projectMockups: Record<string, { desktopSrc: string; mobileSrc: string }> = {
+  'mais burguer': {
+    desktopSrc: '/assets/mais-burguer-desktop.png',
+    mobileSrc: '/assets/mais-burguer-mobile.png',
+  },
+  'amagus lapidar': {
+    desktopSrc: '/assets/amagus-lapidar-desktop.png',
+    mobileSrc: '/assets/amagus-lapidar-mobile.png',
+  },
+};
+
 function getCaseVariant(segment: string) {
   const normalizedSegment = segment.toLowerCase();
 
@@ -25,8 +36,9 @@ function getCaseVariant(segment: string) {
 
 export function CaseVisual({ caseStudy, showProjectMockup = false }: CaseVisualProps) {
   const variant = getCaseVariant(caseStudy.segment);
-  const isMaisBurguerCase = caseStudy.title.trim().toLowerCase() === 'mais burguer';
-  const shouldShowProjectMockup = showProjectMockup && isMaisBurguerCase;
+  const normalizedTitle = caseStudy.title.trim().toLowerCase();
+  const projectMockup = showProjectMockup ? projectMockups[normalizedTitle] : undefined;
+  const shouldShowProjectMockup = Boolean(projectMockup);
 
   return (
     <div className={`case-visual case-visual--${variant}${shouldShowProjectMockup ? ' case-visual--project-mockup' : ''}`}>
@@ -39,7 +51,7 @@ export function CaseVisual({ caseStudy, showProjectMockup = false }: CaseVisualP
           </div>
           {shouldShowProjectMockup ? (
             <div className="mock-browser__screen">
-              <img src="/assets/mais-burguer-desktop.png" alt="" loading="lazy" />
+              <img src={projectMockup!.desktopSrc} alt="" loading="lazy" />
             </div>
           ) : (
             <>
@@ -62,7 +74,7 @@ export function CaseVisual({ caseStudy, showProjectMockup = false }: CaseVisualP
         <div className="mock-phone">
           {shouldShowProjectMockup ? (
             <div className="mock-phone__screen">
-              <img src="/assets/mais-burguer-mobile.png" alt="" loading="lazy" />
+              <img src={projectMockup!.mobileSrc} alt="" loading="lazy" />
             </div>
           ) : (
             <>
